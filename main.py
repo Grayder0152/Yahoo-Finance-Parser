@@ -1,12 +1,21 @@
-from database import save_data_to_db
 from rest import get_json_data
+from parser import parse_data
+
+import asyncio
+import aiohttp
 
 companies_list = ('PD', 'ZUO', 'PINS', 'ZM', 'PVTL', 'DOCU', 'CLDR', 'RUN')
 
-if __name__ == '__main__':
-    print("\033[33mParse and save data to database...")
-    save_data_to_db(companies_list)
-    print("\033[32mAll data saved success.\n")
 
+async def main():
+    tasks = []
+    async with aiohttp.ClientSession() as session:
+        for country in companies_list:
+            tasks.append(asyncio.create_task(parse_data(country, session)))
+        await asyncio.gather(*tasks)
+
+
+if __name__ == '__main__':
+    asyncio.run(main())
     print("\033[33mJSON with the saved data:")
     print(get_json_data('PD'))
