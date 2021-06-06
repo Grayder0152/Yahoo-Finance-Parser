@@ -1,4 +1,4 @@
 .idea
 venv
 companies_financial_data.db
-__pycharm__
+__pycache__
